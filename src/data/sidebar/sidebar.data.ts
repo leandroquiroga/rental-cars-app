@@ -1,4 +1,4 @@
-import { Calendar, Car, Heart } from "lucide-react";
+import { Calendar, Car, Heart, BookText } from "lucide-react";
 
 export const dataGenerateSidebar = [
   {
@@ -19,4 +19,19 @@ export const dataGenerateSidebar = [
     label: "Favorites",
     href: "/favorites",
   },
+]
+
+export const dataGenerateSidebarAdmin = [
+  {
+    index: 1,
+    icon: BookText,
+    label: "Manage Your Cars",
+    href: "/manage-cars",
+  },
+  {
+    index: 2,
+    icon: Calendar,
+    label: "All Reserves",
+    href: "/all-reserves",
+  }
 ]

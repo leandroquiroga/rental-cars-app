@@ -1,16 +1,15 @@
+"use client"
 import React, { PropsWithChildren } from "react";
+import { NavbarDashboard, Sidebar } from "@/components/app";
 
-import { Sidebar } from "@/components/app";
-
-
-export default function LayoutDashboard({children}: PropsWithChildren<object>) {
+export default function LayoutDashboard({ children }: PropsWithChildren<object>) {
   return (
     <div className="flex w-full h-full">
-      <div className="h-full xl:block w-80 xl:fixed">  {/* Colocar la propiedad hidden en un futuro */}
+      <div className="hidden h-full xl:block xl:fixed w-80">
         <Sidebar />
       </div>
       <div className="w-full h-full xl:ml-80">
-        NavarDashboard...
+        <NavbarDashboard />
         <div className="p-6 h-max">
           {children}
         </div>
