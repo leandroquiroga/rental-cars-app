@@ -26,12 +26,12 @@ export const dataGenerateSidebarAdmin = [
     index: 1,
     icon: BookText,
     label: "Manage Your Cars",
-    href: "/manage-cars",
+    href: "/dashboard/admin/manage-cars",
   },
   {
     index: 2,
     icon: Calendar,
     label: "All Reserves",
-    href: "/all-reserves",
+    href: "/dashboard/admin/all-reserves",
   }
 ]

@@ -5,6 +5,7 @@ import { Icon, LucideProps } from 'lucide-react'
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils'
+import { resolveTheme } from '@/utils/functions';
 
 type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
 
@@ -16,7 +17,7 @@ interface ListItemProps {
 
 export default function ListItems({ label, href, icon: Icon }: ListItemProps) {
   const pathName = usePathname();
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function ListItems({ label, href, icon: Icon }: ListItemProps) {
   }
   
   const activePath = pathName === href;
-
+  const effectiveTheme = resolveTheme(theme!, systemTheme!);
   return (
     <div>
       <Link
@@ -44,8 +45,8 @@ export default function ListItems({ label, href, icon: Icon }: ListItemProps) {
             rounded-lg
             cursor-pointer
           `,
-          activePath && theme === 'dark' && 'bg-slate-400/20',
-          activePath && theme === 'light' && 'bg-zinc-800/20',
+          activePath && effectiveTheme === 'dark' && 'bg-slate-400/20',
+          activePath && effectiveTheme === 'light' && 'bg-zinc-800/20',
         )}
       >
         <Icon size={24} strokeWidth={1}/>

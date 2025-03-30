@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@clerk/nextjs";
 import { Separator } from "@/components/ui/separator";
-import LogoDashboard from "../logo-dashboard";
+import LogoDashboard from "../logo-dashboard/logo-dashboard";
 import SidebarItems from "./sidebar-items";
 
 export function Sidebar() {
