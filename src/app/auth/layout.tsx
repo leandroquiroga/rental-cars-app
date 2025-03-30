@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export default function AuthLayout({ children }: PropsWithChildren<object>) {
   return (
-    <div className='grid lg:grid-cols-2 h-full justify-center items-center'>
+    <div className='grid lg:grid-cols-1 h-full justify-center items-center'>
       <div className='flex flex-col justify-center items-center p-10'>
         <div className='flex m-2 h-full justify-center items-center'>
           <Image

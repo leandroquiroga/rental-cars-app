@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 
 import { ClerkProvider } from '@clerk/nextjs';
 import NextTopLoader from "nextjs-toploader";
+import { Toaster } from '@/components/ui/sonner';
 
 import "./globals.css"; 
 
@@ -38,6 +39,7 @@ export default function RootLayout({
           >
             <NextTopLoader color="#202020" />
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

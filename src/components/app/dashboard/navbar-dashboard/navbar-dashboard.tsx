@@ -2,6 +2,7 @@ import React from 'react'
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Menu } from 'lucide-react'
@@ -18,12 +19,13 @@ export function NavbarDashboard() {
             <Menu />
           </SheetTrigger>
           <SheetContent side='left'>
+            <SheetTitle />
             <SidebarItems />
           </SheetContent>
         </Sheet>
       </div>
 
-      <div>
+      <div className='flex items-center justify-end w-full gap-x-2'>
         {/* Realizar la autenticacion para ver este boton */}
         <UserButton />
       </div>
