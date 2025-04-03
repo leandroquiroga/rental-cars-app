@@ -1,6 +1,6 @@
  
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,12 +16,14 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { formSchema } from '@/utils/functions'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { UploadButton } from '@/utils/uploadthing'
 
 
 export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublish"
 
 
 export const FormAddCard = () => {
+  const [photoUpload, setPhotoUpload] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     
@@ -45,7 +47,7 @@ export const FormAddCard = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2 ">
-        <div className='grid grid-cols-2 gap-4 my-2'> 
+        <div className='grid grid-cols-1 gap-4 my-2'> 
           <FormField
             control={form.control}
             name="name"
@@ -159,6 +161,35 @@ export const FormAddCard = () => {
                     <SelectItem value="luxe">De Luxe</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="photo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Car Image</FormLabel>
+                <FormControl>
+                  {photoUpload
+                    ? (<p className='text-0'>Image Uploaded!</p>)
+                    : (
+                      <UploadButton
+                        className="rouded-lg outline-2 outline-dotted"
+                        {...field}
+                        endpoint="photo"
+                        onClientUploadComplete={(res) => {
+                          form.setValue("photo", res[0].ufsUrl);
+                          setPhotoUpload(true);
+                        }}
+                        onUploadError={(error: Error) => {
+                          console.log(`ERROR! ${error.message}`);
+                          setPhotoUpload(false);
+                        }}
+                      />
+                  )}
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
