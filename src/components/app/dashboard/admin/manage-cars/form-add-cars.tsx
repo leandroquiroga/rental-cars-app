@@ -1,5 +1,4 @@
- 
-"use client"
+ "use client"
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -14,9 +13,11 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
-import { formSchema } from '@/utils/functions'
+import { formSchema, resolveTheme } from '@/utils/functions'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { UploadButton } from '@/utils/uploadthing'
+import { UploadDropzone } from '@/utils/uploadthing'
+import { useTheme } from 'next-themes'
+import { cn } from '@/lib/utils'
 
 
 export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublish"
@@ -24,6 +25,8 @@ export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo"
 
 export const FormAddCard = () => {
   const [photoUpload, setPhotoUpload] = useState<boolean>(false);
+  const { theme, systemTheme } = useTheme();
+  const effectiveTheme = resolveTheme(theme!, systemTheme!);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     
@@ -39,15 +42,27 @@ export const FormAddCard = () => {
       type: "",
     },
   })
-  
+
+  const uploadConfig = {
+    endpoint: "photo" as const,
+     
+    onClientUploadComplete: (res: any) => {
+      form.setValue("photo", res[0].url); 
+      setPhotoUpload(true);
+    },
+    onUploadError: (error: Error) => {
+      console.log(`ERROR! ${error.message}`);
+      setPhotoUpload(false);
+    },
+  };
   const handleOnSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2 ">
-        <div className='grid grid-cols-1 gap-4 my-2'> 
+      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2">
+        <div className='grid grid-cols-2 gap-4 my-2'> 
           <FormField
             control={form.control}
             name="name"
@@ -81,9 +96,9 @@ export const FormAddCard = () => {
             <FormItem>
               <FormLabel>Trassmission</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className='w-full'>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select the type of cars " />
+                    <SelectValue placeholder="Select the transmission" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -102,9 +117,9 @@ export const FormAddCard = () => {
               <FormItem>
                 <FormLabel>People</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
+                  <FormControl className='w-full'>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select the quantity of people " />
+                      <SelectValue placeholder="Select the quantity" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -125,9 +140,9 @@ export const FormAddCard = () => {
               <FormItem>
                 <FormLabel>Engine</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
+                  <FormControl className='w-full'>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select the engine of the car" />
+                      <SelectValue placeholder="Select the engine" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -148,9 +163,9 @@ export const FormAddCard = () => {
               <FormItem>
                 <FormLabel>Type</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
+                  <FormControl className='w-full'>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select the type of the car" />
+                      <SelectValue placeholder="Select the type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -167,27 +182,49 @@ export const FormAddCard = () => {
           />
           <FormField
             control={form.control}
-            name="photo"
+            name="priceDay"
             render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="$20000" type='number' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='w-full my-2'>
+          <FormField
+            control={form.control}
+            name="photo"
+            render={() => (
               <FormItem>
                 <FormLabel>Car Image</FormLabel>
                 <FormControl>
                   {photoUpload
                     ? (<p className='text-0'>Image Uploaded!</p>)
                     : (
-                      <UploadButton
-                        className="rouded-lg outline-2 outline-dotted"
-                        {...field}
-                        endpoint="photo"
-                        onClientUploadComplete={(res) => {
-                          form.setValue("photo", res[0].ufsUrl);
-                          setPhotoUpload(true);
-                        }}
-                        onUploadError={(error: Error) => {
-                          console.log(`ERROR! ${error.message}`);
-                          setPhotoUpload(false);
-                        }}
-                      />
+                    <UploadDropzone
+                      className="w-full border-3 border-dotted rounded-lg p-2 transition-colors"
+                      appearance={{
+                        button({ ready, isUploading }) {
+                          return {
+                            backgroundColor: cn(effectiveTheme === "dark" ? "#efefef":"#202020"),
+                            fontSize: "1rem",
+                            ...(ready && { color: cn(effectiveTheme === "dark" ? "#202020":"#efefef") }),
+                            ...(isUploading && { color: cn(effectiveTheme === "dark" ? "#efefef":"#202020") }),
+                          };
+                        },
+                        container: {
+                          marginTop: "1rem",
+                        },
+                        allowedContent: {
+                          color: "#a1a1aa",
+                        },
+                      }}
+                        {...uploadConfig}
+                    />
                   )}
                 </FormControl>
                 <FormMessage />
@@ -195,7 +232,7 @@ export const FormAddCard = () => {
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button className='w-full mt2' type="submit">Create Car</Button>
       </form>
     </Form>
   )
