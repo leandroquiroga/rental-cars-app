@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -29,12 +28,9 @@ export const ButtonAddCars = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Car</DialogTitle>
-          <DialogDescription>
-            <FormAddCard />
-          </DialogDescription>
+          <DialogTitle>New Car</DialogTitle>
         </DialogHeader>
-        {/* Add your form or content here */}
+        <FormAddCard setOpenDialog={setOpenDialog} />
       </DialogContent>
     </Dialog>
   )
