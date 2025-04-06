@@ -12,6 +12,6 @@ export const formSchema = z.object({
   photo: z.string().min(1, "Photo is required"),
   engine: z.string().min(3).max(50),
   type: z.string().min(3).max(50),
-  priceDay: z.string().min(3).max(50),
-  isPublish: z.boolean(),
+  priceDay: z.string().min(2).max(50),
+  isPublished: z.boolean(),
 })
