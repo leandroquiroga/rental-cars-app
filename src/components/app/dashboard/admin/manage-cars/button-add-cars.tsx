@@ -28,9 +28,9 @@ export const ButtonAddCars = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Car</DialogTitle>
+          <DialogTitle>New Car</DialogTitle>
         </DialogHeader>
-        <FormAddCard />
+        <FormAddCard setOpenDialog={setOpenDialog} />
       </DialogContent>
     </Dialog>
   )
