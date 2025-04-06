@@ -1,5 +1,12 @@
- "use client"
+"use client"
 import React, { Dispatch } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
+import { LoaderCircle } from 'lucide-react'
+import { toast } from 'sonner'
+import { z } from "zod"
+import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -11,24 +18,19 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
 import { formSchema, resolveTheme } from '@/utils/functions'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { useTheme } from 'next-themes'
 import UploadDropZone from './upload-drop-zone'
-import { LoaderCircle } from 'lucide-react'
-import { toast } from 'sonner'
-import axios from 'axios'
 
 
-export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublish"
+export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublished"
 
 interface FormAddCardProps {
   setOpenDialog: Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
+  const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const effectiveTheme: "dark" | "light" = resolveTheme(theme!, systemTheme!) as "dark" | "light";
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,7 +42,7 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
       cv: "",
       engine: "",
       people: "",
-      isPublish: false,
+      isPublished: false,
       photo: "",
       priceDay: "",
       type: "",
@@ -52,7 +54,8 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
     setOpenDialog(false);
     try {
       await axios.post("/api/cars", values)
-      toast.success("Car created successfully", {description: "The car has been created successfully" ,duration: 5000, position: "bottom-right"})
+      toast.success("Car created successfully", { description: "The car has been created successfully", duration: 5000, position: "bottom-right" })
+      router.refresh();
     } catch (error) {
       console.log(error)
       toast.error("Something went wrong", {description: "Please try again", duration: 5000, position: "bottom-right"})
