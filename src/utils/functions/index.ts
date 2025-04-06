@@ -9,7 +9,7 @@ export const formSchema = z.object({
   cv: z.string().min(3).max(50),
   transmission: z.string().min(3).max(50),
   people: z.string().min(1),
-  photo: z.string().min(50).max(100),
+  photo: z.string().min(1, "Photo is required"),
   engine: z.string().min(3).max(50),
   type: z.string().min(3).max(50),
   priceDay: z.string().min(3).max(50),
