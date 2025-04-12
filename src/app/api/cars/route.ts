@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 
-type Methods = 'findUnique' | 'findByMany' | 'create';
+type Methods = 'findUnique' | 'findMany' | 'create';
 type OrderBy = 'asc' | 'desc';
 
 export async function GET(request: Request) {
@@ -18,14 +18,15 @@ export async function GET(request: Request) {
 
   const orderBy = orderByRaw ? { createdAt: orderByRaw } : undefined;
 
-  if (orderByRaw && !['asc', 'desc'].includes(orderByRaw)) return NextResponse.json({ message: 'orderBy inválido' }, { status: 400 });
+  if (orderByRaw && !['asc', 'desc'].includes(orderByRaw))
+      return NextResponse.json({ message: 'orderBy inválido' }, { status: 400 });
 
   try {
     switch (method) {
       case 'findUnique':
         const getCarUnique = await prisma.car.findUnique({ where: { id } });
         return NextResponse.json(getCarUnique);
-      case 'findByMany':
+      case 'findMany':
         const getCars = await prisma.car.findMany({ where: { userid: userId }, orderBy });
         return NextResponse.json(getCars);
       default:
