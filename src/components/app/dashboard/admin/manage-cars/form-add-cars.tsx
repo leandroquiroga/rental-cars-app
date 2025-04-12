@@ -1,6 +1,5 @@
 "use client"
 import React, { Dispatch } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { LoaderCircle } from 'lucide-react'
@@ -21,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { formSchema, resolveTheme } from '@/utils/functions'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import UploadDropZone from './upload-drop-zone'
+import { useCreateData } from '@/hooks/useCreateData'
 
 
 export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublished"
@@ -32,6 +32,7 @@ interface FormAddCardProps {
 export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
+  const {mutate: handleCreate, isPending, isSuccess } = useCreateData();
   const effectiveTheme: "dark" | "light" = resolveTheme(theme!, systemTheme!) as "dark" | "light";
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,16 +54,21 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
   const handleOnSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpenDialog(false);
     try {
-      await axios.post("/api/cars", values)
-      toast.success("Car created successfully", { description: "The car has been created successfully", duration: 5000, position: "bottom-right" })
-      router.refresh();
+      handleCreate(values);
+
+      if (isSuccess) {
+        toast.success("Car created successfully", { description: "The car has been created successfully", duration: 5000, position: "bottom-right" })
+        router.refresh();
+      }
+
+      return
     } catch (error) {
       console.log(error)
       toast.error("Something went wrong", {description: "Please try again", duration: 5000, position: "bottom-right"})
     }
   };
 
-  const { isValid, isSubmitSuccessful, isLoading } = form.formState;
+  const { isValid, isSubmitSuccessful } = form.formState;
 
   return (
     <Form {...form}>
@@ -225,8 +231,19 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
           />
         </div>
         {
-          isLoading ? <LoaderCircle className='w-6 h-6 animate-spin' /> :
-          <Button className='w-full mt-2 cursor-pointer' type="submit" disabled={!isValid && !isSubmitSuccessful}>Create Car</Button>
+          isPending ? <LoaderCircle className='w-6 h-6 animate-spin' /> :
+            <Button
+              className='w-full mt-2 cursor-pointer'
+              type="submit"
+              disabled={!isValid && !isSubmitSuccessful}
+            >
+              {
+                isPending
+                  ? <LoaderCircle className='w-6 h-6 animate-spin' />
+                  : <span>Save</span>
+              }
+            
+            </Button>
         }
       </form>
     </Form>
