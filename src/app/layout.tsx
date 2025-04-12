@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-
 import { ClerkProvider } from '@clerk/nextjs';
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 import "./globals.css"; 
+import { UseQueryProvider } from "@/context/UseQueryProvider";
 
 const outfit = Outfit({
   variable: "--font-geist-mono",
@@ -24,23 +24,29 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;}>) {
+  children: React.ReactNode;
+}>) {
+  
+
+
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${outfit.variable} antialiased`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextTopLoader color="#202020" />
-            {children}
-            <Toaster />
-          </ThemeProvider>
+          <UseQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NextTopLoader color="#202020" />
+              {children}
+              <Toaster />
+            </ThemeProvider>
+          </UseQueryProvider>
         </body>
       </html>
     </ClerkProvider>
