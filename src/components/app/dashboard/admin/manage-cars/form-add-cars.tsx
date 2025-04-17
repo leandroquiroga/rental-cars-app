@@ -73,7 +73,7 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2">
-        <div className='grid grid-cols-2 gap-4 my-2'> 
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-2'> 
           <FormField
             control={form.control}
             name="name"
