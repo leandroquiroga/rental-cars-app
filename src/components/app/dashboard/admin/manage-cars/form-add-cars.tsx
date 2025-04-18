@@ -1,5 +1,5 @@
 "use client"
-import React, { Dispatch } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { LoaderCircle } from 'lucide-react'
@@ -26,10 +26,10 @@ import { useCreateData } from '@/hooks/useCreateData'
 export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublished"
 
 interface FormAddCardProps {
-  setOpenDialog: Dispatch<React.SetStateAction<boolean>>;
+  toogleModal: () => void;
 }
 
-export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
+export const FormAddCard = ({toogleModal}: FormAddCardProps) => {
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const {mutate: handleCreate, isPending, isSuccess } = useCreateData();
@@ -52,7 +52,6 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
   })
 
   const handleOnSubmit = async (values: z.infer<typeof formSchema>) => {
-    setOpenDialog(false);
     try {
       handleCreate(values);
 
@@ -72,7 +71,7 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2">
+      <form onSubmit={form.handleSubmit(handleOnSubmit)} onClick={toogleModal} className="p-2">
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-2'> 
           <FormField
             control={form.control}
