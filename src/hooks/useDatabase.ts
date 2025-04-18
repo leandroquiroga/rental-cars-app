@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 
 
@@ -22,7 +22,7 @@ export interface Cars {
 }
 
 interface Response {
-  response: Cars[];
+  response?: Cars[];
   loading: boolean;
   error: Error | null;
 }
@@ -62,13 +62,19 @@ const fetchDatabase = async (orderBy: OrderBy, method: MethodType, id: string) =
   return selectedMethod;
 };
 
+type TData = Cars[]; // El tipo correcto basado en la respuesta esperada
+type TError = Error;
+
 export const useDataBase = (method: MethodType, orderBy: OrderBy, id: string): Response => {
-  const { data, error, isLoading } = useQuery({
+  const queryOptions: UseQueryOptions<TData, TError> = {
     queryKey: ['data'],
     queryFn: () => fetchDatabase(orderBy, method, id),
+    gcTime: 1000 * 60 * 5, // 5 minutes
     retry: 3,
     enabled: !!id && !!method,
-  });
+  }
+
+  const { data, error, isLoading } = useQuery(queryOptions);
 
   return {
     response: data,
