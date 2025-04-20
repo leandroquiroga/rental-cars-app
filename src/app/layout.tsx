@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 
 import "./globals.css"; 
 import { UseQueryProvider } from "@/context/UseQueryProvider";
+import { DesingProvider } from "@/context/UseDesingProvider";
 
 const outfit = Outfit({
   variable: "--font-geist-mono",
@@ -35,18 +36,20 @@ export default function RootLayout({
         <body
           className={`${outfit.variable} antialiased`}
         >
-          <UseQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <NextTopLoader color="#202020" />
-              {children}
-              <Toaster />
-            </ThemeProvider>
-          </UseQueryProvider>
+          <DesingProvider>
+            <UseQueryProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <NextTopLoader color="#202020" />
+                {children}
+                <Toaster />
+              </ThemeProvider>
+            </UseQueryProvider>
+          </DesingProvider>
         </body>
       </html>
     </ClerkProvider>

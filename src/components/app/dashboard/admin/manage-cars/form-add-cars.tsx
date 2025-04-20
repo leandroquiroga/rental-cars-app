@@ -1,5 +1,5 @@
 "use client"
-import React, { Dispatch } from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { LoaderCircle } from 'lucide-react'
@@ -21,15 +21,20 @@ import { formSchema, resolveTheme } from '@/utils/functions'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import UploadDropZone from './upload-drop-zone'
 import { useCreateData } from '@/hooks/useCreateData'
+import { DesignContext } from '@/context/UseDesingProvider'
+import { Cars } from '@/hooks/useDatabase'
 
 
 export type FormFieldName =  "name" | "cv" | "transmission" | "people" | "photo" | "engine" | "type" | "priceDay" | "isPublished"
 
-interface FormAddCardProps {
-  setOpenDialog: Dispatch<React.SetStateAction<boolean>>;
+type DesingContexType = {
+  toogleModal: () => void;
+  editingCar: Cars | null;
+  // clearEditingCar: () => void;
 }
 
-export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
+export const FormAddCard = () => {
+  const { toogleModal, editingCar } = useContext(DesignContext) as DesingContexType;
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const {mutate: handleCreate, isPending, isSuccess } = useCreateData();
@@ -38,22 +43,22 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
     resolver: zodResolver(formSchema),
     
     defaultValues: {
-      name: "",
-      transmission: "",
-      cv: "",
-      engine: "",
-      people: "",
+      name: editingCar?.name || "",
+      transmission: editingCar?.transmission || "",
+      cv: editingCar?.cv || "",
+      engine: editingCar?.engine || "",
+      people: editingCar?.people || "",
       isPublished: false,
-      photo: "",
-      priceDay: "",
-      type: "",
+      photo: editingCar?.photo || "",
+      priceDay: editingCar?.priceDay || "",
+      type: editingCar?.type || "",
     },
     mode: "onChange"
   })
 
   const handleOnSubmit = async (values: z.infer<typeof formSchema>) => {
-    setOpenDialog(false);
     try {
+      toogleModal();
       handleCreate(values);
 
       if (isSuccess) {
@@ -72,8 +77,8 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="p-2">
-        <div className='grid grid-cols-2 gap-4 my-2'> 
+      <form onSubmit={form.handleSubmit(handleOnSubmit)} onClick={toogleModal} className="p-2">
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-2'> 
           <FormField
             control={form.control}
             name="name"
@@ -205,31 +210,35 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
             )}
           />
         </div>
-        <div className='w-full my-2'>
-          <FormField
-            control={form.control}
-            name="photo"
-            render={() => (
-              <FormItem>
-                <FormLabel>Car Image</FormLabel>
-                <FormControl>
-                  <UploadDropZone
-                    effectiveTheme={effectiveTheme}
-                    endpoint={"photo"}
-                    onUploadComplete={(url: string) =>
-                    {
-                      form.setValue("photo", url);
-                      form.trigger("photo")
-                    }}
-                    onUploadError={(error: Error) => { console.log(`ERROR! ${error.message}`) }}
-                    buttonText="Upload image"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        {
+          !editingCar && (
+            <div className='w-full my-2'>
+              <FormField
+                control={form.control}
+                name="photo"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Car Image</FormLabel>
+                    <FormControl>
+                      <UploadDropZone
+                        effectiveTheme={effectiveTheme}
+                        endpoint={"photo"}
+                        onUploadComplete={(url: string) =>
+                        {
+                          form.setValue("photo", url);
+                          form.trigger("photo")
+                        }}
+                        onUploadError={(error: Error) => { console.log(`ERROR! ${error.message}`) }}
+                        buttonText="Upload image"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )
+        }
         {
           isPending ? <LoaderCircle className='w-6 h-6 animate-spin' /> :
             <Button
@@ -240,7 +249,7 @@ export const FormAddCard = ({setOpenDialog}: FormAddCardProps) => {
               {
                 isPending
                   ? <LoaderCircle className='w-6 h-6 animate-spin' />
-                  : <span>Save</span>
+                  : <span>{editingCar ? 'Edit Car': 'Save Car'}</span>
               }
             
             </Button>

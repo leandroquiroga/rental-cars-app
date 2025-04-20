@@ -18,7 +18,7 @@ export default async function ManageCarsPage() {
            <ListCars userId={userId} />      
         }
       </div>
-      <div className='block absolute bottom-10 right-5'>
+      <div className='block fixed bottom-10 right-5'>
         <ButtonAddCars />
       </div>
     </div>
