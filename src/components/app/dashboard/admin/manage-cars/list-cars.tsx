@@ -14,12 +14,22 @@ interface PropsListCars {
   userId: string;
 }
 
+type DesingContextType = {
+  toogleModal: () => void;
+  setEditingCar: (car: Cars) => void;
+}
+
 export const ListCars = ({userId}: PropsListCars) => {
   const { response, loading, error } = useDataBase('findMany', 'asc', userId);
-  const { toogleModal } = useContext(DesignContext) as {toogleModal: () => void};
+  const { toogleModal, setEditingCar } = useContext(DesignContext) as DesingContextType;
   
   if (loading) return (<SkeletonCars />);
   if (error) return <div>Error</div>
+
+  const handleEditCar = (car: Cars) => {
+    setEditingCar(car);
+    toogleModal();
+  }
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-2 md:my-2 gap-6 my-4 xl:grid-cols-3'>
@@ -78,7 +88,7 @@ export const ListCars = ({userId}: PropsListCars) => {
                   variant='outline'
                   className='cursor-pointer my-1 w-5/12'
                   size='lg'
-                  onClick={toogleModal}
+                  onClick={() => handleEditCar(car)}
                 >
                   Edit
                   <Edit2 className='w-4 h-4 ml-2' />
