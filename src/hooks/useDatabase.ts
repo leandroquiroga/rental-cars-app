@@ -1,5 +1,6 @@
+import { findManyDatabase, findOneDatabase } from '@/services/service';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import axios from 'axios';
+// import axios from 'axios';
 
 
 type OrderBy = 'asc' | 'desc';
@@ -27,27 +28,27 @@ interface Response {
   error: Error | null;
 }
 
-const findOneDatabase = async (method: MethodType, id: string) => {
-  try {
-    const url = `/api/cars?method=${method}&id=${id}`;
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error("[CARS]", error);
-    throw new Error('Error fetching cars');
-  };
-};
+// const findOneDatabase = async (method: MethodType, id: string) => {
+//   try {
+//     const url = `/api/cars?method=${method}&id=${id}`;
+//     const response = await axios.get(url);
+//     return response.data;
+//   } catch (error) {
+//     console.error("[CARS]", error);
+//     throw new Error('Error fetching cars');
+//   };
+// };
 
-const findManyDatabase = async (method: MethodType, orderBy: OrderBy) => {
-  try {
-    const url = `/api/cars?method=${method}&orderBy=${orderBy}`;
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error("[CARS]", error);
-    throw new Error('Error fetching cars');
-  };
-}
+// const findManyDatabase = async (method: MethodType, orderBy: OrderBy) => {
+//   try {
+//     const url = `/api/cars?method=${method}&orderBy=${orderBy}`;
+//     const response = await axios.get(url);
+//     return response.data;
+//   } catch (error) {
+//     console.error("[CARS]", error);
+//     throw new Error('Error fetching cars');
+//   };
+// }
 
 const fetchDatabase = async (orderBy: OrderBy, method: MethodType, id: string) => {
   const methods = {
