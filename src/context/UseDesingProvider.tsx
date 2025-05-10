@@ -1,6 +1,6 @@
 "use client"
+import { Cars } from '@/interfaces';
 import { createContext, useState } from 'react';
-import { Cars } from '@/hooks/useDatabase';
 
 export const DesignContext = createContext({});
 

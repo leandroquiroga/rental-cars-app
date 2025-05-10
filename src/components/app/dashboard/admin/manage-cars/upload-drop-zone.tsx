@@ -3,19 +3,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils"; 
 import { LoaderIcon } from "lucide-react"; 
 import { UploadDropzone } from "@/utils/uploadthing";
-import { ClientUploadedFileData, EndpointArg, FileRoute } from "uploadthing/types";
-
-type Endpoint = EndpointArg<{ photo: FileRoute<{ input: undefined; output: { uploadBy: string | null; }; errorShape: JSON; }>; }, "photo">;
-export type Response = ClientUploadedFileData<{ uploadBy: string | null; }>[] | undefined
-
-interface UploadDropZoneProps {
-  endpoint: Endpoint;
-  buttonText?: string;
-  onUploadComplete: (url: string) => void;
-  onUploadError: (error: Error) => void;
-  effectiveTheme: "dark" | "light"; 
-}
-
+import { ResponseUpdropZone, UploadDropZoneProps } from "@/interfaces";
 
 export const UploadDropZone = ({
   endpoint,
@@ -87,7 +75,7 @@ export const UploadDropZone = ({
         },
       }}
       endpoint={endpoint}
-      onClientUploadComplete={(res: Response) => {
+      onClientUploadComplete={(res: ResponseUpdropZone) => {
         console.log({res})
         if (res && res[0]?.ufsUrl) {
           onUploadComplete(res[0].ufsUrl);

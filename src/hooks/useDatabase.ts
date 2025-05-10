@@ -1,54 +1,7 @@
-import { findManyDatabase, findOneDatabase } from '@/services/service';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-// import axios from 'axios';
+import { MethodType, OrderBy, ResponseUseDataBase, TData, TError } from '@/interfaces';
+import { findManyDatabase, findOneDatabase } from '@/services';
 
-
-type OrderBy = 'asc' | 'desc';
-type MethodType = 'findMany' | 'findUnique';
-
-export interface Cars {
-  id: string;
-  userid: string;
-  name: string;
-  cv: string;
-  transmission: string;
-  people: string;
-  photo: string;
-  priceDay: string;
-  engine: string;
-  type: string;
-  isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Response {
-  response?: Cars[];
-  loading: boolean;
-  error: Error | null;
-}
-
-// const findOneDatabase = async (method: MethodType, id: string) => {
-//   try {
-//     const url = `/api/cars?method=${method}&id=${id}`;
-//     const response = await axios.get(url);
-//     return response.data;
-//   } catch (error) {
-//     console.error("[CARS]", error);
-//     throw new Error('Error fetching cars');
-//   };
-// };
-
-// const findManyDatabase = async (method: MethodType, orderBy: OrderBy) => {
-//   try {
-//     const url = `/api/cars?method=${method}&orderBy=${orderBy}`;
-//     const response = await axios.get(url);
-//     return response.data;
-//   } catch (error) {
-//     console.error("[CARS]", error);
-//     throw new Error('Error fetching cars');
-//   };
-// }
 
 const fetchDatabase = async (orderBy: OrderBy, method: MethodType, id: string) => {
   const methods = {
@@ -63,10 +16,7 @@ const fetchDatabase = async (orderBy: OrderBy, method: MethodType, id: string) =
   return selectedMethod;
 };
 
-type TData = Cars[]; // El tipo correcto basado en la respuesta esperada
-type TError = Error;
-
-export const useDataBase = (method: MethodType, orderBy: OrderBy, id: string): Response => {
+export const useDataBase = (method: MethodType, orderBy: OrderBy, id: string): ResponseUseDataBase => {
   const queryOptions: UseQueryOptions<TData, TError> = {
     queryKey: ['data'],
     queryFn: () => fetchDatabase(orderBy, method, id),

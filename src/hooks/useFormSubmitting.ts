@@ -1,6 +1,5 @@
 "use client"
 import { useContext } from "react";
-import { Cars } from "./useDatabase";
 import { DesignContext } from "@/context/UseDesingProvider";
 import { useRouter } from "next/navigation";
 import { useCreateData } from "./useCreateData";
@@ -8,22 +7,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "@/utils/functions";
 import { toast } from "sonner";
-import { z } from "zod";
+import { DesingContextType, useFormSubmittingProps, Values } from "@/interfaces";
 
-type DesingContexType = {
-  toogleModal: () => void
-}
-
-type useFormSubmittingProps = {
-  editingCar: Cars | null;
-};
 
 export const useFormSubmitting = ({ editingCar }: useFormSubmittingProps) => {
-  const { toogleModal } = useContext(DesignContext) as DesingContexType;
+  const { toogleModal } = useContext(DesignContext) as DesingContextType;
   const router = useRouter();
   const { mutate: handleCreate, isPending } = useCreateData();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<Values>({
     resolver: zodResolver(formSchema),
 
     defaultValues: {

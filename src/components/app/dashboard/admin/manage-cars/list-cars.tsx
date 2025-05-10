@@ -5,19 +5,11 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button'
 // import { Toaster } from '@/components/ui/sonner'
 import { Download, Edit2, Fuel, Gauge, Gem, Trash, Upload, User, Wrench } from 'lucide-react';
-import { Cars, useDataBase } from '@/hooks/useDatabase';
+import { useDataBase } from '@/hooks/useDatabase';
 import { SkeletonCars } from '@/components/app/skeleton/skeleton-cars';
 import { DesignContext } from '@/context/UseDesingProvider';
+import { Cars, DesingContextType, PropsListCars } from '@/interfaces';
 
-
-interface PropsListCars {
-  userId: string;
-}
-
-type DesingContextType = {
-  toogleModal: () => void;
-  setEditingCar: (car: Cars) => void;
-}
 
 export const ListCars = ({userId}: PropsListCars) => {
   const { response, loading, error } = useDataBase('findMany', 'asc', userId);

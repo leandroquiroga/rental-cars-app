@@ -1,11 +1,5 @@
 import axios from "axios";
-import { z } from "zod";
-import { formSchema } from "@/utils/functions";
-
-type OrderBy = 'asc' | 'desc';
-type MethodType = 'findMany' | 'findUnique';
-export type Values = z.infer<typeof formSchema>
-
+import { MethodType, OrderBy, Values } from "@/interfaces";
 
 export const findOneDatabase = async (method: MethodType, id: string) => {
   try {

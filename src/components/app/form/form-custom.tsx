@@ -12,17 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from "@/components/ui/input"
 
-
 import { UploadDropZone } from '@/components/app';
 import { useFormSubmitting } from '@/hooks/useFormSubmitting';
-import { Cars } from '@/hooks/useDatabase';
+import { PropsForm } from '@/interfaces';
 
-interface PropsForm {
-  editingCar: Cars | null;
-  effectiveTheme: 'dark' | 'light';
-}
-
-    
+   
 export const CustomForm = ({ editingCar, effectiveTheme }: PropsForm) => {
   const { form, handleOnSubmit, isPending, isValid, toogleModal, isSubmitSuccessful } = useFormSubmitting({ editingCar });
 

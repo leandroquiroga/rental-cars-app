@@ -12,16 +12,11 @@ import { Button } from '@/components/ui/button';
 import { CarIcon } from 'lucide-react';
 import { FormAddCard } from './form-add-cars';
 import { DesignContext } from '@/context/UseDesingProvider';
+import { DesingContextType } from '@/interfaces';
 
-type DesingContexType = {
-  toogleModal: () => void;
-  isOpenModal: boolean
-  clearEditingCar: () => void;
-}
 
 export const ButtonAddCars = () => {
-  // const [openDialog, setOpenDialog] = useState(false);
-  const { toogleModal, isOpenModal, clearEditingCar } = useContext(DesignContext) as DesingContexType;
+  const { toogleModal, isOpenModal, clearEditingCar } = useContext(DesignContext) as DesingContextType;
 
   const handleButtonClick = () => {
     toogleModal();

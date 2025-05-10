@@ -1,19 +1,12 @@
 "use client";
-import React, { ForwardRefExoticComponent, RefAttributes, useEffect, useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import Link from 'next/link'
-import { Icon, LucideProps } from 'lucide-react'
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils'
 import { resolveTheme } from '@/utils/functions';
+import { ListItemProps } from '@/interfaces';
 
-type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
-
-interface ListItemProps {
-  icon: Icon,
-  label: string,
-  href: string,
-}
 
 export default function ListItems({ label, href, icon: Icon }: ListItemProps) {
   const pathName = usePathname();
